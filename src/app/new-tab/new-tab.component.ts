@@ -9,15 +9,18 @@ import { ApiService } from 'app/service/api.service';
 export class NewTabComponent implements OnInit {
 
   selectedFile: File | null = null;
-  columnHeader: any = [ "First Name", "Last Name", "Course" ];
+  columnHeader: any = [ "Clean Text", "Sentiment"];
   rowData: any [] = [];
+
+  isLoading: boolean = false;
+
+  pieChartData: any[] = [];
+  sentimentTableData: any[] = [];
+  lineChartData: any[] = [];
 
   constructor(private apiService: ApiService) { }
 
   ngOnInit(): void {
-    this.apiService.getStudentData().subscribe((response) => {
-      this.rowData = response;
-    })
   }
 
   onFileSelected(event: Event): void {
@@ -28,11 +31,20 @@ export class NewTabComponent implements OnInit {
   }
 
   uploadFile(): void {
+    this.isLoading = true;
     if (this.selectedFile) {
       const formData = new FormData();
       formData.append('file', this.selectedFile, this.selectedFile.name);
 
-      this.apiService.uploadFile(formData)
+      this.apiService.uploadFile(formData).subscribe((response) => {
+        this.pieChartData = response.pieChart;
+        this.sentimentTableData = response.sentimentTable;
+        this.lineChartData = response.lineChart;
+
+        console.log(this.pieChartData);
+        console.log(this.lineChartData);
+        this.isLoading = false;
+      })
     }
   }
 

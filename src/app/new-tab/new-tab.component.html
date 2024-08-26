@@ -1,11 +1,37 @@
 <div class="main-content">
     <div class="container-fluid">
+        
         <div class="row">
             <div class="col-6">
                 <div class="card">
                     <div class="card-header card-header-primary">
-                        <h4 class="card-title ">Simple Table</h4>
-                        <p class="card-category"> Here is a subtitle for this table</p>
+                        <h4 class="card-title ">Upload File</h4>
+                        <p class="card-category"> Please upload .csv file here</p>
+                    </div>
+
+                    <div class="card-body text-center">
+                        <div *ngIf="!isLoading">
+                            <input type="file" (change)="onFileSelected($event)" accept=".csv">
+                            <button (click)="uploadFile()">Upload CSV</button>
+                        </div>
+
+                        <div *ngIf="isLoading">
+                            Loading...
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--                 Sentiment Overview                   -->
+        <div *ngIf="!isLoading" class="row">
+            <div class="col-6">
+                <!-- Sentiment Number Card -->
+                <div class="card">
+                    <div class="card-header card-header-primary">
+                        <h4 class="card-title ">Number of Feedbacks</h4>
+                        <p class="card-category"> An overview of feedback sentiments</p>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -15,19 +41,92 @@
                                         {{column}}
                                     </th>
                                 </thead>
-                                <tbody>
-                                    <tr *ngFor="let row of rowData;">
+                                <tbody *ngIf="sentimentTableData.length > 0">
+                                    
+                                    <tr *ngFor="let row of sentimentTableData;">
                                         <td>
-                                            {{row.firstname}}
+                                            {{row.cleanText}}
                                         </td>
                                         <td>
-                                            {{row.lastname}}
+                                            {{row.sentiment}}
                                         </td>
-                                        <td>
-                                            {{row.course}}
-                                        </td>
-                                    </tr>
+                                    </tr>   
+                                      
                                 </tbody>
+
+                                <tbody *ngIf="sentimentTableData.length == 0">
+                                    <tr>
+                                        <td>
+                                            NO DATA
+                                        </td>
+                                        <td>
+                                            NO DATA
+                                        </td>
+                                    </tr> 
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sentiment Doughnut Chart -->
+                <div class="card card-chart">
+                    <div class="card-header card-header-success">
+                        <div id="pieChart"></div>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title">Sentiment Distribution</h4>
+                        <p class="card-category">
+                            <span class="text-success"><i class="fa fa-long-arrow-up"></i> 55% </span> increase in today sales.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sentiment Line Chart -->
+
+        <!--                 Feedback Overview                    -->
+        <!-- Feedback Table -->
+        <div *ngIf="!isLoading" class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header card-header-primary">
+                        <h4 class="card-title ">Feedback Overview</h4>
+                        <p class="card-category"> An overview of feedback sentiments</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead class=" text-primary">
+                                    <th *ngFor="let column of columnHeader;">
+                                        {{column}}
+                                    </th>
+                                </thead>
+                                <tbody *ngIf="sentimentTableData.length > 0">
+                                    
+                                    <tr *ngFor="let row of sentimentTableData;">
+                                        <td>
+                                            {{row.cleanText}}
+                                        </td>
+                                        <td>
+                                            {{row.sentiment}}
+                                        </td>
+                                    </tr>   
+                                      
+                                </tbody>
+
+                                <tbody *ngIf="sentimentTableData.length == 0">
+                                    <tr>
+                                        <td>
+                                            NO DATA
+                                        </td>
+                                        <td>
+                                            NO DATA
+                                        </td>
+                                    </tr> 
+                                </tbody>
+
                             </table>
                         </div>
                     </div>
@@ -35,19 +134,11 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header card-header-primary">
-                        <h4 class="card-title ">Upload File</h4>
-                        <p class="card-category"> Please upload .csv file here</p>
-                    </div>
+        <!-- Feedback Top 10 Positive Word Cloud -->
+        <!-- Feedback Top 10 Negative Word Cloud -->
 
-                    <div class="card-body text-center">
-                        <input type="file" (change)="onFileSelected($event)" accept=".csv">
-                        <button (click)="uploadFile()">Upload CSV</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!--                 Focus Area Overview                    -->
+        <!-- Focus Area Clustered Bar Chart (All sentiment/ Focus Area) -->
+        <!-- Focus Area Side Bar Chart (Negative sentiment/ Focus Area) -->
+        <!-- Focus Area Negative Table (Text (Negative) / Focus Area) -->
     </div>

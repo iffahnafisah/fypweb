@@ -21,12 +21,7 @@ export class ApiService {
       return this.http.post<any>(`${this.baseUrl}/students/create`, data);
     }
     
-    uploadFile(file: any){
-      this.http.post(`${this.baseUrl}/file-manager/upload`, file)
-      .subscribe(response => {
-        console.log('Upload successful', response);
-      }, error => {
-        console.error('Upload failed', error);
-      });
+    uploadFile(file: any): Observable<any>{
+      return this.http.post(`${this.baseUrl}/file-manager/upload`, file);
     }
 }
