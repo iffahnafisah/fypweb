@@ -11,7 +11,7 @@ import { ApiService } from 'app/service/api.service';
 export class NewTabComponent implements OnInit {
 
   selectedFile: File | null = null;
-  columnHeader: any = [ "Customer Feedback", "Sentiment"];
+  columnHeader: any = [ "Customer Feedback", "Sentiment", "Focus Area"];
   rowData: any [] = [];
 
   chart= anychart.map();
@@ -23,6 +23,9 @@ export class NewTabComponent implements OnInit {
   lineChartData: any[] = [];
   columnChartData: any[] = [];
   totalSize: number = 0;
+  totalPos: number = 0;
+  totalNeg: number = 0;
+  totalNeu: number = 0;
   bestFocusArea: string = '';
   poorFocusArea: string = '';
 
@@ -62,37 +65,47 @@ export class NewTabComponent implements OnInit {
     const chartData = anychart.data.set(data);
   
     // Map the data
-    const seriesData_1 = chartData.mapAs({ x: 0, value: 1 });
-    const seriesData_2 = chartData.mapAs({ x: 0, value: 2 });
+    const seriesData_1 = chartData.mapAs({ x: 0, value: 1 }); // Assuming this is "positive"
+    const seriesData_2 = chartData.mapAs({ x: 0, value: 2 }); // Assuming this is "negative"
   
     // Create the line chart
     const chart = anychart.line();
-
+  
+    // Set chart title
     chart.title('Sentiment Trend');
+  
+    // Enable and configure the legend
+    chart.legend(true);
+    chart.legend().position('top');
+    chart.legend().itemsLayout('horizontal-expandable');
   
     // Set the interactivity mode
     chart.interactivity().hoverMode('single');
   
-    // Create the first series, set the data, and name
+    // Create the first series for "positive" sentiment
     const series1 = chart.line(seriesData_1);
-    series1.name('Series 1');
-  
-    // Configure the visual settings of the first series
-    series1.normal().stroke('#00cc99', 1, '10 5', 'round');
-    series1.hovered().stroke('#00cc99', 2, '10 5', 'round');
-    series1.selected().stroke('#00cc99', 4, '10 5', 'round');
-  
-    // Create the second series, set the data, and name
+    series1.name('Positive');
+    series1.normal().stroke('#00cc99', 2); // Solid green line with thickness 2
+    series1.markers()
+        .enabled(true)  // Enable markers
+        .type('circle') // Set marker type to circle
+        .size(4)        // Set marker size
+        .fill('#00cc99') // Set marker color to green
+        .stroke(null);  // No border stroke for markers
+
+    // Create the second series for "negative" sentiment
     const series2 = chart.line(seriesData_2);
-    series2.name('Series 2');
-  
-    // Configure the visual settings of the second series
-    series2.normal().stroke('#0066cc');
-    series2.hovered().stroke('#0066cc', 2);
-    series2.selected().stroke('#0066cc', 4);
+    series2.name('Negative');
+    series2.normal().stroke('#cc3300', 2); // Solid red line with thickness 2
+    series2.markers()
+        .enabled(true)  // Enable markers
+        .type('circle') // Set marker type to circle
+        .size(4)        // Set marker size
+        .fill('#cc3300') // Set marker color to red
+        .stroke(null);  // No border stroke for markers
   
     // Set the titles of the axes
-    chart.xAxis().title('Year');
+    chart.xAxis().title('Month');
     chart.yAxis().title('Frequency of Sentiments');
   
     // Set the container id
@@ -101,6 +114,7 @@ export class NewTabComponent implements OnInit {
     // Initiate drawing the chart
     chart.draw();
   }
+  
 
   createColumnChart(data: any[]) {
     if (!document.getElementById('columnChart')) {
@@ -126,6 +140,11 @@ export class NewTabComponent implements OnInit {
     chart.column(seriesData_3).name("Coverage");
     chart.column(seriesData_4).name("Customer Solution");
 
+    // Configure the legend
+    chart.legend(true);
+    chart.legend().position('top');
+    chart.legend().itemsLayout('horizontal-expandable');
+
     chart.barsPadding(0);
     chart.barGroupsPadding(1.5);
     chart.title("Focus Area Distribution");
@@ -149,6 +168,9 @@ export class NewTabComponent implements OnInit {
         this.lineChartData = response.lineChart;
         this.columnChartData = response.columnChart;
         this.totalSize = response.totalSize;
+        this.totalPos = response.totalPos;
+        this.totalNeg = response.totalNeg;
+        this.totalNeu = response.totalNeu;
         this.bestFocusArea = response.bestFocusArea;
         this.poorFocusArea = response.poorFocusArea;
         this.dataReceived = true;
