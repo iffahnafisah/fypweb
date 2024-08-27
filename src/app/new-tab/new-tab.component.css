@@ -1,0 +1,9 @@
+.vertical-stats {
+    display: flex;
+    flex-direction: column;
+}
+  
+  .vertical-stats li {
+    margin-bottom: 5px; /* Adds some spacing between list items */
+  }
+  
