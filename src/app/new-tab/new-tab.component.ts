@@ -28,6 +28,8 @@ export class NewTabComponent implements OnInit {
   totalNeu: number = 0;
   bestFocusArea: string = '';
   poorFocusArea: string = '';
+  positiveTrend: string = '';
+  negativeTrend: string = '';
 
   constructor(private apiService: ApiService) { }
 
@@ -173,6 +175,8 @@ export class NewTabComponent implements OnInit {
         this.totalNeu = response.totalNeu;
         this.bestFocusArea = response.bestFocusArea;
         this.poorFocusArea = response.poorFocusArea;
+        this.positiveTrend = response.positiveTrend;
+        this.negativeTrend = response.negativeTrend;
         this.dataReceived = true;
 
         console.log(response);
